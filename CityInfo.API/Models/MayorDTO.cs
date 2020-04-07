@@ -9,11 +9,12 @@ namespace CityInfo.API.Models
 	public class MayorDTO
 	{
 		public int Id { get; set; }
+
 		[Required(ErrorMessage = "Name is required")]
 		[MaxLength(50)]
 		public string Name { get; set; }
+
 		[Required(ErrorMessage = "Age is required")]
-		[MaxLength(2)]
 		public int Age { get; set; }
 	}
 }
