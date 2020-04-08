@@ -74,6 +74,16 @@ namespace CityInfo.API.Controllers
 			if (mayor == null)
 				return NotFound();
 
+			if(mayorUpdate.Age < 40)
+			{
+				 ModelState.AddModelError("Age", "Mayor is Underage");
+			}
+
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			mayor.Name = mayorUpdate.Name;
 			mayor.Age = mayorUpdate.Age;
 
