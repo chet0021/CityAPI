@@ -35,16 +35,16 @@ namespace CityInfo.API.Controllers
 
             }
         };
-        /*    [HttpGet]
-            public IActionResult Gets()
-            {
-                if (_oMayors.Count == 0)
-                {
-                    return NotFound("No list found.");
-                }
-                return Ok(_oMayors);
-            }*/
         [HttpGet]
+        public IActionResult Gets()
+        {
+            if (_oMayors.Count == 0)
+            {
+                return NotFound("No list found.");
+            }
+            return Ok(_oMayors);
+        }
+        [HttpGet("id")]
         public IActionResult Get(int id)
         {
             var oMayor = _oMayors.SingleOrDefault(x => x.Id == id);
@@ -54,7 +54,7 @@ namespace CityInfo.API.Controllers
             }
             return Ok(oMayor);
         }
-        [HttpPost]
+        [HttpPost("id")]
         public IActionResult Save(Mayor oMayor)
         {
             _oMayors.Add(oMayor);
