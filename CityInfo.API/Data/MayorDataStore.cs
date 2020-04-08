@@ -18,13 +18,13 @@ namespace CityInfo.API.Data
 					{
 						Id = 1,
 						Name = "Mayor Isko Moreno",
-						Age = 5
+						Age = 45
 					},
 				new MayorDTO()
 					{
 						Id = 2,
 						Name = "Vico Sotto",
-						Age = 10
+						Age = 50
 					}
 			};
 
