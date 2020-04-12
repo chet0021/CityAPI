@@ -11,6 +11,7 @@ namespace CityInfo.API.Data
 		//static// can't be change, immutable
 		public static CityDataStore Current { get; } = new CityDataStore();
 		public List<CityDTO> Cities { get; set; }
+		public List<MayorDTO> Mayors { get; set; }
 		public CityDataStore()
 		{
 			Cities = new List<CityDTO>() {
@@ -30,8 +31,10 @@ namespace CityInfo.API.Data
 								Name = "Pasig River",
 								Description = "The Pasig River is a river in the Philippines that connects Laguna de Bay to Manila Bay"
 							}
-						}
+						},
+
 					},
+
 				new CityDTO()
 					{
 						Id = 2,
@@ -43,8 +46,10 @@ namespace CityInfo.API.Data
 								Name = "Greenbelt",
 								Description = "Greenbelt is a shopping mall located at Ayala Center"
 							}
-						}
+						},
 					},
+
+
 				new CityDTO()
 					{
 						Id = 3,
@@ -68,6 +73,7 @@ namespace CityInfo.API.Data
 							}
 						}
 					},
+
 				new CityDTO() {
 					Id = 4,
 					Name = "Taguig",
@@ -87,6 +93,18 @@ namespace CityInfo.API.Data
 				}
 			};
 
+			Mayors = new List<MayorDTO>()
+			{
+				new MayorDTO()
+				{
+					Id=1,
+					MayorName="Vico Sotto",
+					Age = 31
+				}
+			};
+
 		}
+
+		
 	}
 }

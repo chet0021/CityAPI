@@ -4,28 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using CityInfo.API.Data;
 using CityInfo.API.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
 
 namespace CityInfo.API.Controllers
 {
-    [Route("api/mayors")]
     [ApiController]
-    public class MayorController : ControllerBase
+    [Route("api/mayor")]
+    public class MayorController : Controller
     {
         [HttpGet]
         public IActionResult GetMayors()
         {
-            var mayors = MayorDataStore.Current.Mayors;
-            return Ok(mayors);
+            var mayor = CityDataStore.Current.Mayors;
+            return Ok(mayor);
         }
 
-        [HttpGet("{mayorId}", Name = "getMayor")]
-        public IActionResult GetMayor(int mayorId)
+        [HttpGet("{id}", Name = "GetMayorById")]
+        public IActionResult GetMayorById(int id)
         {
-            var mayor = MayorDataStore.Current.Mayors.FirstOrDefault(c => c.Id == mayorId);
+            var mayor = CityDataStore.Current.Mayors.FirstOrDefault(c => c.Id == id);
             if (mayor == null)
             {
                 return NotFound();
@@ -33,63 +30,71 @@ namespace CityInfo.API.Controllers
             return Ok(mayor);
         }
 
-		[HttpPost]
-		public IActionResult CreateMayor([FromBody] MayorDTO mayor)
-		{
-			var mayors = MayorDataStore.Current.Mayors;
-			var existingMayor = mayors.FirstOrDefault(c => c.Name.ToLower().Equals(mayor.Name.ToLower()));
+        [HttpPost]
+        public IActionResult CreateMayor([FromBody] MayorDTO mayor)
+        {
+            var mayors = CityDataStore.Current.Mayors;
+            var existingMayor = mayors.FirstOrDefault(c => c.MayorName.ToLower().Equals(mayor.MayorName.ToLower()));
+            var mayorAge = mayor.Age;
 
-			if (existingMayor != null)
-			{
-				ModelState.AddModelError("Name", "Mayor Name must be Unique");
-			}
+            if (existingMayor != null)
+            {
+                ModelState.AddModelError("MayorName", "Mayor name must be unique");
+            }
 
-			if(mayor.Age < 40)
-			{
-				ModelState.AddModelError("Age", "Mayor is Underage");
-			}
+            if (mayorAge < 40)
+            {
+                ModelState.AddModelError("Age", "Underage being a mayor");
+            }
 
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-			var lastID = mayors.Max(c => c.Id);
+            var lastId = mayors.Max(c => c.Id);
+            var newMayor = new MayorDTO()
+            {
+                Id = ++lastId,
+                MayorName = mayor.MayorName,
+                Age = mayor.Age
+            };
+            mayors.Add(newMayor);
+            return Ok();
+        }
 
-			var newMayor = new MayorDTO()
-			{
-				Id = ++lastID,
-				Name = mayor.Name,
-				Age = mayor.Age
-			};
-			mayors.Add(newMayor);
-			return CreatedAtRoute("GetMayor", new { mayorId = newMayor.Id }, newMayor);
-		}
+        [HttpPut("{id}")]
+        public IActionResult UpdateMayor(int id, [FromBody] MayorForUpdateDTO mayorUpdate)
+        {
+            var mayorModel = CityDataStore.Current.Mayors.FirstOrDefault(c => c.Id == id);
 
-		[HttpPut("{id}")]
-		public IActionResult UpdateMayor(int id, [FromBody] MayorForUpdateDTO mayorUpdate)
-		{
-			var mayor = MayorDataStore.Current.Mayors.FirstOrDefault(c => c.Id == id);
+            if (mayorModel == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                mayorModel.MayorName = mayorUpdate.MayorName;
+                mayorModel.Age = mayorUpdate.Age;
+                return Ok();
+            }
+        }
 
-			if (mayor == null)
-				return NotFound();
+        [HttpDelete("{id}")]
+        public IActionResult DeleteMayor(int id)
+        {
+            var mayorModel = CityDataStore.Current.Mayors.FirstOrDefault(c => c.Id == id);
 
-			mayor.Name = mayorUpdate.Name;
-			mayor.Age = mayorUpdate.Age;
-
-			return NoContent();
-		}
-
-		[HttpDelete("{id}")]
-		public IActionResult DeleteMayor(int id)
-		{
-			var mayor = MayorDataStore.Current.Mayors.FirstOrDefault(c => c.Id == id);
-
-			if (mayor == null)
-				return NotFound();
-
-			MayorDataStore.Current.Mayors.Remove(mayor);
-			return NoContent();
-		}
-	}
+            if (mayorModel == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                CityDataStore.Current.Mayors.Remove(mayorModel);
+                return NoContent();
+            }
+        }
+    }
 }
+
