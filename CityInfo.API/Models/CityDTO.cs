@@ -12,11 +12,13 @@ namespace CityInfo.API.Models
 		[Required(ErrorMessage = "Name is required")]
 		[MaxLength(50)]
 		public string Name { get; set; }
-		[Required(ErrorMessage = "Description is required")]
+
 		[MaxLength(200)]
 		public string Description { get; set; }
 
 		//Returning child resources: 
 		public ICollection<PointOfInterestDTO> PointOfInterests { get; set; } = new List<PointOfInterestDTO>();
+		public ICollection<MayorDTO> CityMayor { get; set; } = new List<MayorDTO>();
+
 	}
 }

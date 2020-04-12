@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers
 {
-	[Route("api/cities/{cityId}/pointOfInterest")]
 	[ApiController]
+	[Route("api/cities/{cityId}/pointOfInterest")]
 	public class PointOfInterestController : ControllerBase
 	{
 		

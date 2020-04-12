@@ -7,7 +7,6 @@ using CityInfo.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CityInfo.API.Controllers
 {
@@ -38,30 +37,12 @@ namespace CityInfo.API.Controllers
 		[HttpPost]
 		public IActionResult CreateCity([FromBody] CityDTO city)
 		{
-
-			var invalidCities = new List<string>()
-			{
-				"Laguna", "Bulacan"
-			};
-
-			var cities = CityDataStore.Current.Cities;
-			var existingCity = cities.FirstOrDefault(c => c.Name.ToLower().Equals(city.Name.ToLower()));
-			var invalidCityList = invalidCities.Any(c => c.ToLower().Equals(city.Name.ToLower()));
-
-			if (existingCity != null)
-			{
-				ModelState.AddModelError("Name", $"{city.Name} is an invalid city.");
-			}
-
-			if (existingCity != null)
-			{
-				ModelState.AddModelError("Name","Name must be Unique");
-			}
-
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
+
+			var cities = CityDataStore.Current.Cities;
 
 			var lastID = cities.Max(c => c.Id);
 
